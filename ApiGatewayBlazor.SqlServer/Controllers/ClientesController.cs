@@ -47,7 +47,7 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
             _context.Clientes.Add(clientes);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetClientes", new { Id = clientes.Id }, clientes);
+            return CreatedAtAction("GetClientes", new { clientes.Id }, clientes);
         }
 
         [HttpPut("{id}")]
