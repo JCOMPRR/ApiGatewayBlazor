@@ -13,52 +13,52 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VentasController : Controller
+    public class ProductosController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public VentasController(ApplicationDbContext context)
+        public ProductosController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Venta>>> Index()
+        public async Task<ActionResult<IEnumerable<Producto>>> Index()
         {
-            var ventas = await _context.Ventas.ToListAsync();
-            return Ok(ventas);
+            var productos = await _context.Productos.ToListAsync();
+            return Ok(productos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Venta>> GetVenta(int id)
+        public async Task<ActionResult<Producto>> GetProducto(int id)
         {
-            var ventas = await _context.Ventas.FindAsync(id);
+            var productos = await _context.Productos.FindAsync(id);
 
-            if (ventas == null)
+            if (productos == null)
             {
                 return NotFound();
             }
 
-            return Ok(ventas);
+            return Ok(productos);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Venta>> PostVenta([FromBody] Venta ventas)
+        public async Task<ActionResult<Producto>> PostProducto([FromBody] Producto productos)
         {
-            _context.Ventas.Add(ventas);
+            _context.Productos.Add(productos);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVentas", new { Id = ventas.IdVenta }, ventas);
+            return CreatedAtAction("GetProductos", new { Id = productos.IdProducto }, productos);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVenta(int id, Venta ventas)
+        public async Task<IActionResult> PutProducto(int id, Producto productos)
         {
-            if (id != ventas.IdVenta)
+            if (id != productos.IdProducto)
             {
                 return BadRequest();
             }
 
-            _context.Entry(ventas).State = EntityState.Modified;
+            _context.Entry(productos).State = EntityState.Modified;
 
             try
             {
@@ -66,7 +66,7 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!VentaExists(id))
+                if (!ProductoExists(id))
                 {
                     return NotFound();
                 }
@@ -80,24 +80,23 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVenta(int id)
+        public async Task<IActionResult> DeleteProducto(int id)
         {
-            var ventas = await _context.Ventas.FindAsync(id);
-            if (ventas == null)
+            var productos = await _context.Productos.FindAsync(id);
+            if (productos == null)
             {
                 return NotFound();
             }
 
-            _context.Ventas.Remove(ventas);
+            _context.Productos.Remove(productos);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool VentaExists(int id)
+        private bool ProductoExists(int id)
         {
-            return _context.Ventas.Any(e => e.IdVenta == id);
+            return _context.Productos.Any(e => e.IdProducto == id);
         }
     }
 }
-

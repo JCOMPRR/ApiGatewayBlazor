@@ -13,52 +13,52 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class VentasController : Controller
+    public class ClientesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public VentasController(ApplicationDbContext context)
+        public ClientesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Venta>>> Index()
+        public async Task<ActionResult<IEnumerable<Cliente>>> Index()
         {
-            var ventas = await _context.Ventas.ToListAsync();
-            return Ok(ventas);
+            var clientes = await _context.Clientes.ToListAsync();
+            return Ok(clientes);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Venta>> GetVenta(int id)
+        public async Task<ActionResult<Cliente>> GetCliente(int id)
         {
-            var ventas = await _context.Ventas.FindAsync(id);
+            var clientes = await _context.Clientes.FindAsync(id);
 
-            if (ventas == null)
+            if (clientes == null)
             {
                 return NotFound();
             }
 
-            return Ok(ventas);
+            return Ok(clientes);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Venta>> PostVenta([FromBody] Venta ventas)
+        public async Task<ActionResult<Cliente>> PostCliente([FromBody] Cliente clientes)
         {
-            _context.Ventas.Add(ventas);
+            _context.Clientes.Add(clientes);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetVentas", new { Id = ventas.IdVenta }, ventas);
+            return CreatedAtAction("GetClientes", new { Id = clientes.Id }, clientes);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutVenta(int id, Venta ventas)
+        public async Task<IActionResult> PutCliente(int id, Cliente clientes)
         {
-            if (id != ventas.IdVenta)
+            if (id != clientes.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(ventas).State = EntityState.Modified;
+            _context.Entry(clientes).State = EntityState.Modified;
 
             try
             {
@@ -66,7 +66,7 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!VentaExists(id))
+                if (!ClienteExists(id))
                 {
                     return NotFound();
                 }
@@ -80,24 +80,23 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteVenta(int id)
+        public async Task<IActionResult> DeleteCliente(int id)
         {
-            var ventas = await _context.Ventas.FindAsync(id);
-            if (ventas == null)
+            var clientes = await _context.Clientes.FindAsync(id);
+            if (clientes == null)
             {
                 return NotFound();
             }
 
-            _context.Ventas.Remove(ventas);
+            _context.Clientes.Remove(clientes);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool VentaExists(int id)
+        private bool ClienteExists(int id)
         {
-            return _context.Ventas.Any(e => e.IdVenta == id);
+            return _context.Clientes.Any(e => e.Id == id);
         }
     }
 }
-
