@@ -5,121 +5,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ApiGatewayBlazor.SqlServer.Data;
 using ApiGatewayBlazor.SqlServer.Models;
+using System.Diagnostics;
 
 namespace ApiGatewayBlazor.SqlServer.Controllers
 {
-
     [ApiController]
     [Route("api/[controller]")]
     public class VentasController : Controller
     {
-        private readonly VentasContext _context;
-
-        public VentasController(VentasContext context)
+        private readonly ApplicationDbContext _context;
+        public VentasController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Ventas
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-              return _context.Ventas != null ? 
-                          View(await _context.Ventas.ToListAsync()) :
-                          Problem("Entity set 'VentasContext.Ventas'  is null.");
+            return View(await _context.Ventas.ToListAsync()); //Esto es lo que se modifica para que funcione con Blazor y SqlServer
         }
 
-        // GET: Ventas/Details/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Privacy()
         {
-            if (id == null || _context.Ventas == null)
-            {
-                return NotFound();
-            }
-
-            var venta = await _context.Ventas
-                .FirstOrDefaultAsync(m => m.IdVenta == id);
-            if (venta == null)
-            {
-                return NotFound();
-            }
-
-            return View(venta);
+            return View();
         }
 
-        // POST: Ventas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        public async Task<IActionResult> Create([Bind("IdVenta,IdProducto,IdCliente,Cantidad")] Venta venta)
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error() //Esto es lo que se modifica para que funcione con Blazor y SqlServer
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(venta);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(venta);
-        }
-
-        // POST: Ventas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(int id, [Bind("IdVenta,IdProducto,IdCliente,Cantidad")] Venta venta)
-        {
-            if (id != venta.IdVenta)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(venta);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!VentaExists(venta.IdVenta))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(venta);
-        }
-
-        // POST: Ventas/Delete/5
-        [HttpDelete("{id}")]
-
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Ventas == null)
-            {
-                return Problem("Entity set 'VentasContext.Ventas'  is null.");
-            }
-            var venta = await _context.Ventas.FindAsync(id);
-            if (venta != null)
-            {
-                _context.Ventas.Remove(venta);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool VentaExists(int id)
-        {
-          return (_context.Ventas?.Any(e => e.IdVenta == id)).GetValueOrDefault();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
