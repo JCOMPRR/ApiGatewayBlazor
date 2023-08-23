@@ -9,6 +9,9 @@ using ApiGatewayBlazor.SqlServer.Models;
 
 namespace ApiGatewayBlazor.SqlServer.Controllers
 {
+
+    [ApiController]
+    [Route("api/[controller]")]
     public class VentasController : Controller
     {
         private readonly VentasContext _context;
@@ -19,6 +22,7 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
         }
 
         // GET: Ventas
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
               return _context.Ventas != null ? 
@@ -27,6 +31,7 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
         }
 
         // GET: Ventas/Details/5
+        [HttpGet("{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Ventas == null)
@@ -44,17 +49,10 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
             return View(venta);
         }
 
-        // GET: Ventas/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
         // POST: Ventas/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdVenta,IdProducto,IdCliente,Cantidad")] Venta venta)
         {
             if (ModelState.IsValid)
@@ -66,27 +64,10 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
             return View(venta);
         }
 
-        // GET: Ventas/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Ventas == null)
-            {
-                return NotFound();
-            }
-
-            var venta = await _context.Ventas.FindAsync(id);
-            if (venta == null)
-            {
-                return NotFound();
-            }
-            return View(venta);
-        }
-
         // POST: Ventas/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, [Bind("IdVenta,IdProducto,IdCliente,Cantidad")] Venta venta)
         {
             if (id != venta.IdVenta)
@@ -117,27 +98,9 @@ namespace ApiGatewayBlazor.SqlServer.Controllers
             return View(venta);
         }
 
-        // GET: Ventas/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Ventas == null)
-            {
-                return NotFound();
-            }
-
-            var venta = await _context.Ventas
-                .FirstOrDefaultAsync(m => m.IdVenta == id);
-            if (venta == null)
-            {
-                return NotFound();
-            }
-
-            return View(venta);
-        }
-
         // POST: Ventas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpDelete("{id}")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Ventas == null)
