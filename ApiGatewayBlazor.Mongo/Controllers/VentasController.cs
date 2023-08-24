@@ -16,18 +16,28 @@ namespace ApiGatewayBlazor.Mongo.Controllers
         public VentasController()
         {
             _client = new MongoClient("mongodb://localhost:27017");
-            _database = _client.GetDatabase("tipo_movimientos");
+            _database = _client.GetDatabase("tipomovimientos");
             _collection = _database.GetCollection<TipoMovimientos>("movimientos");
 
         }
 
+        //public VentasController()
+        //{
+        //    MongoClient client = new MongoClient("mongodb://localhost:27017");
+        //    IMongoDatabase database = client.GetDatabase("tipo_movimientos");
+        //    IMongoCollection<TipoMovimientos> collection = database.GetCollection<TipoMovimientos>("movimientos");
+        //}
+
+
         [HttpGet]
         public async Task<IActionResult> ConsultarTipoMovimientos([FromBody] TipoMovimientos movimientos)
         {
-            TipoMovimientos movimientos1 = new TipoMovimientos();
-            movimientos1.IdProducto = movimientos.IdProducto;
-            movimientos1.ProductoDescripcion = movimientos.ProductoDescripcion;
-            movimientos1.IdCliente = movimientos.IdCliente;
+            _ = new TipoMovimientos
+            {
+                IdProducto = movimientos.IdProducto,
+                ProductoDescripcion = movimientos.ProductoDescripcion,
+                IdCliente = movimientos.IdCliente
+            };
 
             await _collection.InsertOneAsync(movimientos);
 
@@ -47,27 +57,31 @@ namespace ApiGatewayBlazor.Mongo.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GenerarLike([FromBody] TipoMovimientos like)
-        {
-            TipoMovimientos likes = new TipoMovimientos();
-            likes.Likes = true;
+        //[HttpPost]
+        //public async Task<IActionResult> GenerarLike([FromBody] TipoMovimientos like)
+        //{
+        //    _ = new TipoMovimientos
+        //    {
+        //        Likes = true
+        //    };
 
-            await _collection.InsertOneAsync(like);
+        //    await _collection.InsertOneAsync(like);
 
-            return Ok("Like Agregado.");
-        }
+        //    return Ok("Like Agregado.");
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> GenerarDislike([FromBody] TipoMovimientos dislike)
-        {
-            TipoMovimientos dislikes = new TipoMovimientos();
-            dislikes.DisLikes = true;
+        //[HttpPost]
+        //public async Task<IActionResult> GenerarDislike([FromBody] TipoMovimientos dislike)
+        //{
+        //    _ = new TipoMovimientos
+        //    {
+        //        DisLikes = true
+        //    };
 
-            await _collection.InsertOneAsync(dislike);
+        //    await _collection.InsertOneAsync(dislike);
 
-            return Ok("Dislike Agregado.");
-        }
+        //    return Ok("Dislike Agregado.");
+        //}
 
     }
 }
