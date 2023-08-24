@@ -20,7 +20,7 @@ namespace ApiGatewayBlazor.Mongo.Models
         public int  IdCliente { get; set; }
 
         [BsonElement("tipoDeMovimiento")] 
-        public bool Likes { get; set; } //SI ES TRUE ES UNA VENTA, SI ES FALSE ES UNA COMPRA
-        public bool DisLikes { get; set; }
+        public int Likes { get; set; } //SI ES TRUE ES UNA VENTA, SI ES FALSE ES UNA COMPRA
+        public int DisLikes { get; set; }
     }
 }
